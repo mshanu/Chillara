@@ -12,5 +12,8 @@
     <string name="credit">Credit</string>
     <string name="save">Save</string>
     <string name="trans_amount_hint">Amount</string>
-
+    <string name="rs">\u20B9</string>
+    <string name="label_name">Name</string><string name="label_amount">Amount</string><string name="label_type">Type</string><string name="chillara">Chillara</string>
+    <color name="blue">#ffff0000</color>
+	
 </resources>

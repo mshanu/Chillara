@@ -1,68 +1,82 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/LinearLayout1"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".AddTransActivity" >
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/LinearLayout1"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context=".AddTransActivity">
 
-    <AutoCompleteTextView
-        android:id="@+id/search_contact"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/search_contact" >
+    <TableLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:padding="5dp">
+        <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent" android:padding="5dp">
+            <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="@string/label_name"
+                    android:id="@+id/label_name"/>
+            <AutoCompleteTextView
+                    android:id="@+id/search_contact"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="@string/search_contact" android:editable="false" android:inputType="text"
+                    android:textIsSelectable="false" android:singleLine="true">
 
-        <requestFocus />
-    </AutoCompleteTextView>
+                <requestFocus/>
+            </AutoCompleteTextView>
+        </TableRow>
+        <TableRow android:layout_width="fill_parent" android:layout_height="fill_parent" android:id="@+id/tableRow">
+            <TextView android:layout_width="fill_parent" android:layout_height="wrap_content"
+                      android:textAppearance="?android:attr/textAppearanceLarge" android:text="@string/label_amount"
+                      android:id="@+id/label_amount"/>
+            <EditText
+                    android:id="@+id/trans_amount"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="numberDecimal"
+                    android:hint="@string/trans_amount_hint"/>
+        </TableRow>
+        <TableRow android:layout_width="fill_parent" android:layout_height="fill_parent" android:id="@+id/tableRow2">
+            <RadioGroup
+                    android:id="@+id/trans_type"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
+                <RadioButton
+                        android:id="@+id/trans_type_credit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="@string/credit"/>
+
+                <RadioButton
+                        android:id="@+id/radio1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/debit"/>
+            </RadioGroup>
+            <Button
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_trans"
+                    android:id="@+id/trans_date" android:onClick="onDatePickerButtonClick"/>
+        </TableRow>
+    </TableLayout>
     <LinearLayout
-        android:id="@+id/add_trans_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
-
-        <EditText
-            android:id="@+id/trans_amount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="numberDecimal"
-            android:hint="@string/trans_amount_hint" />
-
-        <DatePicker
-            android:id="@+id/trans_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:calendarViewShown="false"
-         />
-
-       <RadioGroup
-           android:id="@+id/trans_type"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:orientation="horizontal" >
-
-           <RadioButton
-               android:id="@+id/trans_type_credit"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:checked="true"
-               android:text="@string/credit" />
-
-           <RadioButton
-               android:id="@+id/radio1"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:text="@string/debit" />
-       </RadioGroup>
-
-       <Button
-           android:id="@+id/trans_save"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="@string/save" />
-
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" android:gravity="bottom">
+        <Button
+                android:id="@+id/trans_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/save" android:layout_gravity="center"/>
     </LinearLayout>
 
 </LinearLayout>
