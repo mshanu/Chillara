@@ -7,13 +7,14 @@
     <string name="add_trans">Add</string>
     <string name="non_content">No Contents</string>
     <string name="search_contact">Search Contact</string>
-    <string name="title_activity_add_trans">AddTransActivity</string>
+    <string name="title_activity_add_trans">New Transaction</string>
     <string name="debit">Debit</string>
     <string name="credit">Credit</string>
     <string name="save">Save</string>
     <string name="trans_amount_hint">Amount</string>
-    <string name="rs">\u20B9</string>
-    <string name="label_name">Name</string><string name="label_amount">Amount</string><string name="label_type">Type</string><string name="chillara">Chillara</string>
-    <color name="blue">#ffff0000</color>
-	
+    <string name="rs">Rs</string>
+    <string name="label_name">Name</string>
+    <string name="label_amount">Amount</string>
+    <string name="label_type">Type</string>
+    <string name="chillara">Chillara</string><string name="all">All</string><string name="summary">Summary</string><string name="total_transactions">Total Transactions</string><string name="total_credit_amount">Total Credit Amount</string><string name="total_debit_amount">Total Debit Amount</string>
 </resources>

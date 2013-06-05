@@ -1,15 +1,10 @@
 package com.smobs.chillara;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import android.app.Activity;
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -17,25 +12,20 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
 import android.support.v4.app.FragmentActivity;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
-
 import com.smobs.chillara.fragment.DatePickerFragment;
-import com.smobs.models.MyDateFormat;
 import com.smobs.models.TransDBHelper;
 import com.smobs.models.TransReaderContract;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import static com.smobs.models.MyDateFormat.getMyDateFormat;
+import static com.smobs.models.TransReaderContract.TransUser.*;
 
 public class AddTransActivity extends FragmentActivity implements OnItemClickListener, OnClickListener {
 
@@ -44,6 +34,8 @@ public class AddTransActivity extends FragmentActivity implements OnItemClickLis
     private RadioGroup transType;
     private TransDBHelper transDBHelper;
     private Button transDate;
+    private ArrayAdapter<String> searchContactAdapter;
+    private AutoCompleteTextView searchContact;
 
 
     @Override
@@ -62,12 +54,23 @@ public class AddTransActivity extends FragmentActivity implements OnItemClickLis
 
         transDate.setText(getMyDateFormat().format(new Date()));
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getContacts());
-        AutoCompleteTextView searchContact = (AutoCompleteTextView) findViewById(R.id.search_contact);
+        searchContactAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getContacts());
+        searchContact = (AutoCompleteTextView) findViewById(R.id.search_contact);
         searchContact.setOnItemClickListener(this);
+
+        //Done as on selection of text is invisible after selection of the searched string.
+        Resources resources = getResources();
+        int black = resources.getColor(android.R.color.black);
+        searchContact.setTextColor(black);
+
+
         Button saveButton = (Button) findViewById(R.id.trans_save);
         saveButton.setOnClickListener(this);
-        searchContact.setAdapter(adapter);
+        searchContact.setAdapter(searchContactAdapter);
+
+//        AccountManager accountManager = AccountManager.get(this);
+//        Account[] googleAccountType = accountManager.getAccountsByType("com.google");
+
 
     }
 
@@ -99,16 +102,50 @@ public class AddTransActivity extends FragmentActivity implements OnItemClickLis
 
     @Override
     public void onClick(View v) {
+        SQLiteDatabase readableDatabase = transDBHelper.getReadableDatabase();
         SQLiteDatabase writableDatabase = transDBHelper.getWritableDatabase();
+
+        Cursor userCursor = readableDatabase.query(true, TABLE_NAME, null,
+                "TransReaderContract.TransUser.TRANS_USER_HASH = ?", new String[]{String.valueOf(searchedPerson.getText().hashCode())},
+                null, null, null, null);
+        long userTransId;
+        double totalUserCredit = 0.0;
+        double totalUserDebit = 0.0;
+        if (userCursor.getCount() == 0) {
+            ContentValues values = new ContentValues();
+            values.put(TRANS_USER_HASH, searchedPerson.getText().hashCode());
+            values.put(TRANS_USER_NAME, searchedPerson.getText().toString());
+            values.put(TRANS_USER_TOTAL_CREDIT, totalUserCredit);
+            values.put(TRANS_USER_TOTAL_DEBIT, totalUserDebit);
+            userTransId = writableDatabase.insert(TransReaderContract.TransEntry.TABLE_NAME, null, values);
+
+        } else {
+            userCursor.moveToFirst();
+            userTransId = userCursor.getLong(userCursor.getColumnIndex(_ID));
+            totalUserCredit = userCursor.getDouble(userCursor.getColumnIndex(TRANS_USER_TOTAL_CREDIT));
+            totalUserDebit = userCursor.getDouble(userCursor.getColumnIndex(TRANS_USER_TOTAL_DEBIT));
+        }
         ContentValues values = new ContentValues();
-        values.put(TransReaderContract.TransEntry.PERSON_NAME_HASH, searchedPerson.getText().hashCode());
-        values.put(TransReaderContract.TransEntry.PERSON_NAME, searchedPerson.getText().toString());
-        values.put(TransReaderContract.TransEntry.TRANS_AMOUNT, transAmount.getText().toString());
         RadioButton selectedTransType = (RadioButton) findViewById(transType.getCheckedRadioButtonId());
-        CharSequence text = selectedTransType.getText();
-        values.put(TransReaderContract.TransEntry.TRANS_TYPE, text.toString());
+        String transType = selectedTransType.getText().toString();
+
+        values.put(TransReaderContract.TransEntry.TRANS_AMOUNT, transAmount.getText().toString());
+        values.put(TransReaderContract.TransEntry.TRANS_USER_ID, userTransId);
+        values.put(TransReaderContract.TransEntry.TRANS_TYPE, transType);
         values.put(TransReaderContract.TransEntry.TRANS_DATE, transDate.getText().toString());
         writableDatabase.insert(TransReaderContract.TransEntry.TABLE_NAME, null, values);
+
+        if (transType.equals("Credit")) {
+            totalUserCredit = totalUserCredit + Double.valueOf(transAmount.getText().toString());
+        } else {
+            totalUserDebit = totalUserDebit + Double.valueOf(transAmount.getText().toString());
+        }
+
+        String strFilter = _ID + "=?";
+        values = new ContentValues();
+        values.put(TRANS_USER_TOTAL_CREDIT, totalUserCredit);
+        values.put(TRANS_USER_TOTAL_DEBIT, totalUserDebit);
+        writableDatabase.update(TransReaderContract.TransUser.TABLE_NAME, values, strFilter, new String[]{String.valueOf(userTransId)});
 
         finish();
     }

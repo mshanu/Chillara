@@ -1,19 +1,96 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout_trans_list_main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MainActivity" >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="50dp" android:background="@drawable/header_gradient"
+            android:id="@+id/main_header">
+        <TextView android:layout_width="wrap_content" android:layout_height="fill_parent"
+                  android:textAppearance="?android:attr/textAppearanceLarge" android:text="@string/chillara"
+                  android:id="@+id/textView" android:layout_alignParentStart="false"
+                  android:layout_alignParentBottom="false" android:layout_alignParentEnd="false"
+                  android:layout_alignParentTop="false" android:textColor="@color/white"
+                  android:gravity="center_vertical" android:layout_weight="1"/>
+        <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+                     android:id="@+id/imageButton" android:src="@drawable/image_button"
+                     android:layout_alignParentStart="false" android:layout_alignParentEnd="true"
+                     android:adjustViewBounds="false" android:background="@null" android:layout_centerVertical="true"
+                     android:clickable="true" android:focusable="false" android:onClick="navigateToAddTrans"
+                     android:layout_gravity="center"/>
+    </LinearLayout>
 
     <ListView
-        android:id="@+id/trans_list"
-        android:layout_width="match_parent"
-        android:layout_height="0dp" android:layout_weight="1">
+            android:id="@+id/trans_list"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/main_header" android:layout_above="@+id/main_footer" android:divider="@null"
+            android:visibility="invisible">
     </ListView>
-    <Button android:id="@+id/trans_save" android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="@string/save" android:layout_gravity="center"/>
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" android:layout_below="@+id/main_header"
+            android:layout_above="@+id/main_footer" android:visibility="invisible" android:id="@+id/trans_summary">
+        <TableLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" android:gravity="center" android:shrinkColumns="*"
+                android:stretchColumns="*" android:focusable="false" android:visibility="visible">
+            <TableRow
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent" android:padding="10dp">
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="@string/total_transactions"
+                        android:id="@+id/textView2"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:id="@+id/total_trans" android:text="0"/>
+            </TableRow>
+            <TableRow android:layout_width="fill_parent" android:layout_height="fill_parent" android:id="@+id/tableRow"
+                      android:padding="10dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:textAppearance="?android:attr/textAppearanceMedium"
+                          android:text="@string/total_credit_amount" android:id="@+id/textView3"
+                        />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:textAppearance="?android:attr/textAppearanceMedium" android:id="@+id/total_credit_amount"
+                          android:text="0"/>
+            </TableRow>
+            <TableRow android:layout_width="fill_parent" android:layout_height="fill_parent"
+                      android:id="@+id/tableRow2" android:padding="10dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:textAppearance="?android:attr/textAppearanceMedium"
+                          android:text="@string/total_debit_amount" android:id="@+id/textView4"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:textAppearance="?android:attr/textAppearanceMedium"
+                          android:id="@+id/total_debit_amount" android:text="0"/>
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:id="@+id/main_footer" android:orientation="horizontal"
+            android:layout_alignParentEnd="false" android:layout_alignParentBottom="true"
+            android:background="@drawable/header_gradient"
+            android:focusableInTouchMode="false" android:focusable="false" android:gravity="center">
+        <ToggleButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:text="@string/debit" android:id="@+id/btn_all" android:textOff="@string/all"
+                      android:textOn="@string/all" android:onClick="onToggle"/>
+        <ToggleButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:text="@string/credit" android:id="@+id/btn_debit" android:textOn="@string/debit"
+                      android:textOff="@string/debit" android:onClick="onToggle"/>
+        <ToggleButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:text="@string/credit" android:id="@+id/btn_credit" android:textOn="@string/credit"
+                      android:textOff="@string/credit" android:onClick="onToggle"/>
+        <ToggleButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:text="@string/summary" android:id="@+id/btn_summary" android:textOn="@string/summary"
+                      android:textOff="@string/summary" android:onClick="onToggle"/>
+    </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>
+

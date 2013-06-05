@@ -1,21 +1,19 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/LinearLayout1"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              tools:context=".AddTransActivity">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
     <TableLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" android:padding="5dp">
+            android:layout_height="wrap_content" android:padding="5dp" android:shrinkColumns="*"
+            android:stretchColumns="*">
         <TableRow
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent" android:padding="5dp">
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
             <TextView
-                    android:layout_width="fill_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="@string/label_name"
                     android:id="@+id/label_name"/>
             <AutoCompleteTextView
@@ -23,15 +21,16 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
-                    android:hint="@string/search_contact" android:editable="false" android:inputType="text"
-                    android:textIsSelectable="false" android:singleLine="true">
+                    android:hint="@string/search_contact" android:editable="false" android:inputType="textAutoComplete"
+                    android:textIsSelectable="false" android:singleLine="true" android:enabled="true"
+                    android:visibility="visible">
 
                 <requestFocus/>
             </AutoCompleteTextView>
         </TableRow>
         <TableRow android:layout_width="fill_parent" android:layout_height="fill_parent" android:id="@+id/tableRow">
             <TextView android:layout_width="fill_parent" android:layout_height="wrap_content"
-                      android:textAppearance="?android:attr/textAppearanceLarge" android:text="@string/label_amount"
+                      android:textAppearance="?android:attr/textAppearanceSmall" android:text="@string/label_amount"
                       android:id="@+id/label_amount"/>
             <EditText
                     android:id="@+id/trans_amount"
@@ -41,42 +40,35 @@
                     android:inputType="numberDecimal"
                     android:hint="@string/trans_amount_hint"/>
         </TableRow>
-        <TableRow android:layout_width="fill_parent" android:layout_height="fill_parent" android:id="@+id/tableRow2">
-            <RadioGroup
-                    android:id="@+id/trans_type"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                <RadioButton
-                        android:id="@+id/trans_type_credit"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="@string/credit"/>
-
-                <RadioButton
-                        android:id="@+id/radio1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/debit"/>
-            </RadioGroup>
+        <TableRow android:layout_width="wrap_content" android:layout_height="fill_parent" android:id="@+id/tableRow2">
             <Button
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/add_trans"
-                    android:id="@+id/trans_date" android:onClick="onDatePickerButtonClick"/>
+                    android:id="@+id/trans_date" android:onClick="onDatePickerButtonClick" android:layout_span="2"/>
+        </TableRow>
+        <TableRow android:layout_width="fill_parent" android:layout_height="fill_parent" android:id="@+id/tableRow3"
+                >
+            <RadioGroup android:id="@+id/trans_type" android:layout_width="fill_parent"
+                        android:layout_height="fill_parent" android:orientation="horizontal" android:layout_span="2"
+                        android:layout_gravity="center" android:focusable="false">
+                <RadioButton android:id="@+id/trans_type_credit" android:layout_width="wrap_content"
+                             android:layout_height="wrap_content" android:checked="true" android:text="@string/credit"/>
+                <RadioButton android:id="@+id/radio1" android:layout_width="wrap_content"
+                             android:layout_height="wrap_content" android:text="@string/debit"/>
+            </RadioGroup>
         </TableRow>
     </TableLayout>
     <LinearLayout
-            android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" android:gravity="bottom">
+            android:layout_height="wrap_content" android:layout_alignParentEnd="false"
+            android:layout_alignParentBottom="true" android:background="@drawable/header_gradient"
+            android:gravity="center" android:padding="5dp">
         <Button
-                android:id="@+id/trans_save"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/save" android:layout_gravity="center"/>
+                android:layout_height="fill_parent"
+                android:text="@string/save"
+                android:id="@+id/trans_save"/>
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>
