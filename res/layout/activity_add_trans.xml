@@ -3,72 +3,190 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-    <TableLayout
+    <include
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" android:padding="5dp" android:shrinkColumns="*"
-            android:stretchColumns="*">
-        <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="@string/label_name"
-                    android:id="@+id/label_name"/>
-            <AutoCompleteTextView
-                    android:id="@+id/search_contact"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="@string/search_contact" android:editable="false" android:inputType="textAutoComplete"
-                    android:textIsSelectable="false" android:singleLine="true" android:enabled="true"
-                    android:visibility="visible">
+            android:layout_height="50dp"
+            layout="@layout/addheader"
+            android:layout_alignParentStart="true"
+            android:id="@+id/add_trans_header"/>
 
-                <requestFocus/>
-            </AutoCompleteTextView>
-        </TableRow>
-        <TableRow android:layout_width="fill_parent" android:layout_height="fill_parent" android:id="@+id/tableRow">
-            <TextView android:layout_width="fill_parent" android:layout_height="wrap_content"
-                      android:textAppearance="?android:attr/textAppearanceSmall" android:text="@string/label_amount"
-                      android:id="@+id/label_amount"/>
-            <EditText
-                    android:id="@+id/trans_amount"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="numberDecimal"
-                    android:hint="@string/trans_amount_hint"/>
-        </TableRow>
-        <TableRow android:layout_width="wrap_content" android:layout_height="fill_parent" android:id="@+id/tableRow2">
-            <Button
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/add_trans"
-                    android:id="@+id/trans_date" android:onClick="onDatePickerButtonClick" android:layout_span="2"/>
-        </TableRow>
-        <TableRow android:layout_width="fill_parent" android:layout_height="fill_parent" android:id="@+id/tableRow3"
-                >
-            <RadioGroup android:id="@+id/trans_type" android:layout_width="fill_parent"
-                        android:layout_height="fill_parent" android:orientation="horizontal" android:layout_span="2"
-                        android:layout_gravity="center" android:focusable="false">
-                <RadioButton android:id="@+id/trans_type_credit" android:layout_width="wrap_content"
-                             android:layout_height="wrap_content" android:checked="true" android:text="@string/credit"/>
-                <RadioButton android:id="@+id/radio1" android:layout_width="wrap_content"
-                             android:layout_height="wrap_content" android:text="@string/debit"/>
-            </RadioGroup>
-        </TableRow>
-    </TableLayout>
     <LinearLayout
+            android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" android:layout_alignParentEnd="false"
-            android:layout_alignParentBottom="true" android:background="@drawable/header_gradient"
-            android:gravity="center" android:padding="5dp">
-        <Button
+            android:layout_height="40dp"
+            android:layout_below="@+id/add_trans_header"
+            android:background="@drawable/label_background"
+            android:padding="5dp"
+            android:id="@+id/layout_label_search_contact">
+
+        <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
+                android:text="@string/search_contact"
+                android:id="@+id/textView"
+                android:textColor="@color/white"
+                android:gravity="center_vertical"/>
+
+    </LinearLayout>
+
+    <AutoCompleteTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/add_trans_contact"
+            android:layout_below="@+id/layout_label_search_contact"/>
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/add_trans_contact"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/label_background"
+            android:padding="5dp"
+            android:id="@+id/layout_label_category">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:text="@string/category"
+                android:id="@+id/label_category"
+                android:textColor="@color/white"
+                android:gravity="center_vertical"/>
+    </LinearLayout>
+
+    <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:id="@+id/add_trans_category"
+            android:layout_below="@+id/layout_label_category"/>
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/add_trans_category"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/label_background"
+            android:padding="5dp"
+            android:id="@+id/layout_label_amount">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:text="@string/amount"
+                android:id="@+id/label_amount"
+                android:textColor="@color/white"
+                android:gravity="center_vertical"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layout_label_amount"
+            android:id="@+id/linearLayout">
+
+        <EditText
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:ems="10"
+                android:id="@+id/add_trans_amount"
+                android:layout_alignParentTop="false"
+                android:layout_alignParentLeft="false"
+                android:layout_below="@+id/layout_label_amount"
+                />
+
+        <RadioGroup
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal">
+
+            <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/credit"
+                    android:id="@+id/radioButton"
+                    />
+
+            <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/debit"
+                    android:id="@+id/radioButton2"
+                    />
+        </RadioGroup>
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/linearLayout"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/label_background"
+            android:padding="5dp"
+            android:id="@+id/layout_label_date">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:text="@string/date"
+                android:id="@+id/label_date"
+                android:textColor="@color/white"
+                android:gravity="center_vertical"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layout_label_date"
+            >
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Button"
+                android:id="@+id/add_trans_date"
+                />
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Button"
+                android:id="@+id/add_trans_reminder"
+                />
+    </LinearLayout>
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentEnd="false"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/header_gradient"
+            android:gravity="center_horizontal">
+
+        <Button
+                android:layout_width="100dp"
+                android:layout_height="45dp"
                 android:text="@string/save"
-                android:id="@+id/trans_save"/>
+                android:id="@+id/add_trans_save"
+                android:layout_gravity="center"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/button_gradient"
+                android:textColor="@color/white"
+                android:clickable="true"/>
+
+        <Button
+                android:layout_width="100dp"
+                android:layout_height="45dp"
+                android:text="@string/cancel"
+                android:id="@+id/button2"
+                android:layout_gravity="center"
+                android:background="@color/grey"
+                android:textColor="@color/white"
+                android:clickable="true"/>
     </LinearLayout>
 
 </RelativeLayout>

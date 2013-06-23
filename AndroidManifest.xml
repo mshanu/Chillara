@@ -26,6 +26,7 @@
             android:name="com.smobs.chillara.AddTransActivity"
             android:label="@string/title_activity_add_trans" >
         </activity>
+        <activity android:name=".TransUserListActivity"/>
     </application>
 
 </manifest>
