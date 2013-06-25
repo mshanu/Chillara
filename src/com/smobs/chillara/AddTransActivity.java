@@ -2,6 +2,7 @@ package com.smobs.chillara;
 
 import android.content.ContentResolver;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -16,10 +17,14 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.RadioGroup;
+import android.widget.SimpleCursorAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.smobs.chillara.fragment.AddCategoryDialog;
 import com.smobs.chillara.fragment.DatePickerFragment;
 import com.smobs.models.TransDBHelper;
+import com.smobs.models.TransReaderContract;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +40,8 @@ public class AddTransActivity extends FragmentActivity implements OnItemClickLis
     private AutoCompleteTextView searchContact;
     private String selectedPerson;
     private TextView transDescription;
+    private View addCategoryButton;
+    private SimpleCursorAdapter simpleCursorAdapter;
 
 
     @Override
@@ -42,9 +49,28 @@ public class AddTransActivity extends FragmentActivity implements OnItemClickLis
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE); //By this, we will have a title bar that works for all versions :-)
         setContentView(R.layout.activity_add_trans);
+        addCategoryButton = findViewById(R.id.add_trans_add_category);
+        addCategoryButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new AddCategoryDialog().show(getSupportFragmentManager(), "Dialog");
+            }
+        });
 
+        transDBHelper = new TransDBHelper(this);
+        SQLiteDatabase readableDatabase = transDBHelper.getReadableDatabase();
+        Cursor cursor = readableDatabase.query(TransReaderContract.TransCategory.TABLE_NAME,
+                new String[]{TransReaderContract.TransCategory._ID, TransReaderContract.TransCategory.DESCRIPTION}, null, null, null, null, null);
+
+        Spinner categorySpinner = (Spinner) findViewById(R.id.add_trans_category);
+
+        simpleCursorAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_item, cursor, new String[]{TransReaderContract.TransCategory.DESCRIPTION}, new int[]{android.R.id.text1});
+
+
+        categorySpinner.setAdapter(simpleCursorAdapter);
 
     }
+
 
     private List<String> getContacts() {
         ContentResolver contentResolver = getContentResolver();

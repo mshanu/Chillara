@@ -1,11 +1,17 @@
 package com.smobs.models;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import static com.smobs.models.TransReaderContract.createStatementForTransCategory;
+import static com.smobs.models.TransReaderContract.createStatementForUser;
+import static com.smobs.models.TransReaderContract.createStatementForUserTrans;
+
 public class TransDBHelper extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION = 6;
+    public static final int DATABASE_VERSION = 7;
     public static final String DATABASE_NAME = "Trans.db";
 
 
@@ -15,9 +21,9 @@ public class TransDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL(TransReaderContract.createStatementForTransCategory());
-        sqLiteDatabase.execSQL(TransReaderContract.createStatementForUser());
-        sqLiteDatabase.execSQL(TransReaderContract.createStatementForUserTrans());
+        sqLiteDatabase.execSQL(createStatementForTransCategory());
+        sqLiteDatabase.execSQL(createStatementForUser());
+        sqLiteDatabase.execSQL(createStatementForUserTrans());
 
     }
 
@@ -26,6 +32,17 @@ public class TransDBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS '" + TransReaderContract.UserTrans.TABLE_NAME + "';");
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS '" + TransReaderContract.User.TABLE_NAME + "';");
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS '" + TransReaderContract.TransCategory.TABLE_NAME + "';");
+    }
+
+    public void addNewCategory(String category) {
+        String condition = TransReaderContract.TransCategory.DESCRIPTION + "=" + category.toUpperCase();
+        Cursor cursor = getReadableDatabase().query(TransReaderContract.TransCategory.TABLE_NAME, null, condition, null, null, null, null);
+        if (cursor.getCount() == 0) {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(TransReaderContract.TransCategory.DESCRIPTION, category.toUpperCase());
+            getWritableDatabase().insert(TransReaderContract.TransCategory.TABLE_NAME, null, contentValues);
+        }
+        close();
     }
 
 }

@@ -54,18 +54,34 @@
                 android:gravity="center_vertical"/>
     </LinearLayout>
 
-    <Spinner
+    <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:id="@+id/add_trans_category"
-            android:layout_below="@+id/layout_label_category"/>
+            android:layout_height="wrap_content"
+            android:id="@+id/layout_category"
+            android:layout_below="@+id/layout_label_category"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+        <Spinner
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/add_trans_category"
+                android:layout_below="@+id/layout_label_category"
+                />
+
+        <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/add_trans_add_category"
+                android:background="@drawable/button_gradient"
+                android:src="@drawable/content_new"/>
+    </LinearLayout>
 
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="40dp"
-            android:layout_below="@+id/add_trans_category"
-            android:layout_marginTop="10dp"
+            android:layout_below="@+id/layout_category"
             android:background="@drawable/label_background"
             android:padding="5dp"
             android:id="@+id/layout_label_amount">
@@ -83,7 +99,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/layout_label_amount"
-            android:id="@+id/linearLayout">
+            android:id="@+id/linearLayout"
+            >
 
         <EditText
                 android:layout_width="140dp"
@@ -182,9 +199,9 @@
                 android:layout_width="100dp"
                 android:layout_height="45dp"
                 android:text="@string/cancel"
-                android:id="@+id/button2"
+                android:id="@+id/add_trans_cancel"
                 android:layout_gravity="center"
-                android:background="@color/grey"
+                android:background="@drawable/button_gradient"
                 android:textColor="@color/white"
                 android:clickable="true"/>
     </LinearLayout>

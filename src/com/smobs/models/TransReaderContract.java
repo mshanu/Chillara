@@ -47,17 +47,17 @@ public class TransReaderContract {
     }
 
     public static String createStatementForTransCategory() {
-        return new StringBuilder("create table ").append(TransCategory.TABLE_NAME).
-                append(TransCategory._ID).append(" INTEGER PRIMARY KEY").
-                append(TransCategory.DESCRIPTION).append(" TEXT").toString();
+        return new StringBuilder("create table ").append(TransCategory.TABLE_NAME).append("(").
+                append(TransCategory._ID).append(" INTEGER PRIMARY KEY,").
+                append(TransCategory.DESCRIPTION).append(" TEXT);").toString();
     }
 
     public static String createStatementForUser() {
 
-        return new StringBuilder("create table").append(User.TABLE_NAME).append("(").
-                append(User._ID).append(" INTEGER PRIMARY KEY").
-                append(User.TRANS_USER_HASH).append(" TEXT ").
-                append(User.TRANS_USER_NAME).append(" TEXT").
+        return new StringBuilder("create table ").append(User.TABLE_NAME).append("(").
+                append(User._ID).append(" INTEGER PRIMARY KEY,").
+                append(User.TRANS_USER_HASH).append(" TEXT ,").
+                append(User.TRANS_USER_NAME).append(" TEXT,").
                 append(User.TRANS_USER_IMAGE_URL).append(" TEXT);").toString();
 
     }
