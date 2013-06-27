@@ -29,7 +29,7 @@ import com.smobs.models.TransReaderContract;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddTransActivity extends FragmentActivity implements OnItemClickListener, OnClickListener {
+public class AddTransActivity extends FragmentActivity implements OnItemClickListener, OnClickListener, AddCategoryDialog.AddCategoryReactions {
 
     private TextView searchedPerson;
     private TextView transAmount;
@@ -48,26 +48,41 @@ public class AddTransActivity extends FragmentActivity implements OnItemClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE); //By this, we will have a title bar that works for all versions :-)
-        setContentView(R.layout.activity_add_trans);
+        setContentView(R    .layout.activity_add_trans);
         addCategoryButton = findViewById(R.id.add_trans_add_category);
         addCategoryButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                new AddCategoryDialog().show(getSupportFragmentManager(), "Dialog");
+                AddCategoryDialog addCategoryDialog = new AddCategoryDialog();
+                addCategoryDialog.show(getSupportFragmentManager(), "Dialog");
             }
         });
 
         transDBHelper = new TransDBHelper(this);
-        SQLiteDatabase readableDatabase = transDBHelper.getReadableDatabase();
-        Cursor cursor = readableDatabase.query(TransReaderContract.TransCategory.TABLE_NAME,
-                new String[]{TransReaderContract.TransCategory._ID, TransReaderContract.TransCategory.DESCRIPTION}, null, null, null, null, null);
+        Cursor cursor = getAllCategories(transDBHelper.getReadableDatabase());
 
         Spinner categorySpinner = (Spinner) findViewById(R.id.add_trans_category);
 
         simpleCursorAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_item, cursor, new String[]{TransReaderContract.TransCategory.DESCRIPTION}, new int[]{android.R.id.text1});
-
+        simpleCursorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         categorySpinner.setAdapter(simpleCursorAdapter);
+
+    }
+
+    private Cursor getAllCategories(SQLiteDatabase readableDatabase) {
+        return readableDatabase.query(TransReaderContract.TransCategory.TABLE_NAME,
+                new String[]{TransReaderContract.TransCategory._ID, TransReaderContract.TransCategory.DESCRIPTION}, null, null, null, null, null);
+    }
+
+
+    @Override
+    public void onSave() {
+        simpleCursorAdapter.changeCursor(getAllCategories(transDBHelper.getReadableDatabase()));
+    }
+
+    @Override
+    public void onCancel() {
 
     }
 
@@ -158,5 +173,6 @@ public class AddTransActivity extends FragmentActivity implements OnItemClickLis
 
 
     }
+
 
 }

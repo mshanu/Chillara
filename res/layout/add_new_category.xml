@@ -9,6 +9,6 @@
     <EditText
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editText"
+            android:id="@+id/add_trans_new_category"
             android:hint="@string/new_category"/>
 </LinearLayout>

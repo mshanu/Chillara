@@ -35,8 +35,8 @@ public class TransDBHelper extends SQLiteOpenHelper {
     }
 
     public void addNewCategory(String category) {
-        String condition = TransReaderContract.TransCategory.DESCRIPTION + "=" + category.toUpperCase();
-        Cursor cursor = getReadableDatabase().query(TransReaderContract.TransCategory.TABLE_NAME, null, condition, null, null, null, null);
+        String condition = TransReaderContract.TransCategory.DESCRIPTION + "=?";
+        Cursor cursor = getReadableDatabase().query(TransReaderContract.TransCategory.TABLE_NAME, null, condition, new String[]{category}, null, null, null);
         if (cursor.getCount() == 0) {
             ContentValues contentValues = new ContentValues();
             contentValues.put(TransReaderContract.TransCategory.DESCRIPTION, category.toUpperCase());
