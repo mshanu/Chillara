@@ -29,7 +29,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int date) {
-//        Button transDate = (Button) getActivity().findViewById(R.id.add_trans_date);
-//        transDate.setText(getMyDateFormat().format(new Date(year, month, date)));
+        Button transDate = (Button) getActivity().findViewById(R.id.add_trans_date);
+        transDate.setText(getMyDateFormat().format(new Date(year, month, date)));
     }
 }

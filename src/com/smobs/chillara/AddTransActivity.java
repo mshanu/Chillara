@@ -1,12 +1,11 @@
 package com.smobs.chillara;
 
-import android.content.ContentResolver;
+import android.app.AlertDialog;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.provider.ContactsContract.Contacts;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,40 +15,118 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.RadioGroup;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.smobs.chillara.fragment.AddCategoryDialog;
 import com.smobs.chillara.fragment.DatePickerFragment;
 import com.smobs.models.TransDBHelper;
 import com.smobs.models.TransReaderContract;
+import com.smobs.models.User;
+import com.smobs.models.UserTrans;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import static com.smobs.models.MyDateFormat.getMyDateFormat;
 
 public class AddTransActivity extends FragmentActivity implements OnItemClickListener, OnClickListener, AddCategoryDialog.AddCategoryReactions {
 
-    private TextView searchedPerson;
-    private TextView transAmount;
-    private RadioGroup transType;
     private TransDBHelper transDBHelper;
-    private Button transDate;
-    private ArrayAdapter<String> searchContactAdapter;
-    private AutoCompleteTextView searchContact;
-    private String selectedPerson;
-    private TextView transDescription;
     private View addCategoryButton;
     private SimpleCursorAdapter simpleCursorAdapter;
+    private AutoCompleteTextView autoCompleteContact;
+    private Button addTransDate;
+    private Button addTransReminder;
+    private User selectedPerson;
+    private Button saveTrans;
+    private Spinner categorySpinner;
+    private User user;
+    private UserTrans userTrans;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE); //By this, we will have a title bar that works for all versions :-)
-        setContentView(R    .layout.activity_add_trans);
+        setContentView(R.layout.activity_add_trans);
         addCategoryButton = findViewById(R.id.add_trans_add_category);
+        categorySpinner = (Spinner) findViewById(R.id.add_trans_category);
+        autoCompleteContact = (AutoCompleteTextView) findViewById(R.id.add_trans_contact);
+        addTransDate = (Button) findViewById(R.id.add_trans_date);
+        saveTrans = (Button) findViewById(R.id.add_trans_save);
+
+//        addTransReminder = (Button) findViewById(R.id.add_trans_reminder);
+//        addTransReminder.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Calendar calendar = Calendar.getInstance();
+//                Intent intent = new Intent(Intent.ACTION_EDIT);
+//                intent.setType("vnd.android.cursor.item/event");
+//                intent.putExtra("beginTime", calendar.getTimeInMillis());
+//                intent.putExtra("allDay", false);
+//                intent.putExtra("rrule", "FREQ=COUNT=1");
+//                intent.putExtra("endTime", calendar.getTimeInMillis()+60*60*1000);
+//                //intent.putExtra("title", selectedPerson+"");
+//                startActivity(intent);
+//            }
+//        });
+        prepareContact();
+        prepareTransDate();
+        prepateCategory();
+        initializeSave();
+
+    }
+
+    private void initializeSave() {
+        saveTrans.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder alertBuilder = getAlertBuilder(view);
+                if (selectedPerson == null) {
+                    alertBuilder.setMessage("Please select a user").show();
+                    return;
+                }
+                if (categorySpinner.getSelectedItem() == null) {
+                    alertBuilder.setMessage("A category is missing").show();
+                    return;
+                }
+
+
+            }
+
+            private AlertDialog.Builder getAlertBuilder(View view) {
+                return new AlertDialog.Builder(view.getContext()).setTitle("Alert").setNeutralButton("OK", null);
+            }
+        });
+    }
+
+    private void prepareContact() {
+        final ArrayAdapter<User> adapter = new ArrayAdapter<User>(this, android.R.layout.simple_list_item_1, getContacts());
+        autoCompleteContact.setAdapter(adapter);
+        autoCompleteContact.setTextColor(getResources().getColor(R.color.black));
+        autoCompleteContact.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                selectedPerson = (User) adapter.getItem(position);
+            }
+        });
+    }
+
+    private void prepareTransDate() {
+        addTransDate.setText(getMyDateFormat().format(new Date()));
+        addTransDate.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatePickerFragment datePickerFragment = new DatePickerFragment();
+                datePickerFragment.show(getSupportFragmentManager(), "DatePicker");
+
+            }
+        });
+    }
+
+    private void prepateCategory() {
         addCategoryButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -59,6 +136,7 @@ public class AddTransActivity extends FragmentActivity implements OnItemClickLis
         });
 
         transDBHelper = new TransDBHelper(this);
+        transDBHelper.getWritableDatabase().execSQL("delete from " + TransReaderContract.TransCategory.TABLE_NAME);
         Cursor cursor = getAllCategories(transDBHelper.getReadableDatabase());
 
         Spinner categorySpinner = (Spinner) findViewById(R.id.add_trans_category);
@@ -67,7 +145,6 @@ public class AddTransActivity extends FragmentActivity implements OnItemClickLis
         simpleCursorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         categorySpinner.setAdapter(simpleCursorAdapter);
-
     }
 
     private Cursor getAllCategories(SQLiteDatabase readableDatabase) {
@@ -87,25 +164,22 @@ public class AddTransActivity extends FragmentActivity implements OnItemClickLis
     }
 
 
-    private List<String> getContacts() {
-        ContentResolver contentResolver = getContentResolver();
-        Uri uri = ContactsContract.Contacts.CONTENT_URI;
-        String[] projection = null;
-        String selection = null;
-        String[] selectionArgs = null;
-        String sortOrder = null;
-        Cursor cursor = contentResolver.query(uri, projection, selection, selectionArgs, sortOrder);
-        List<String> contactNames = new ArrayList<String>();
+    private List<User> getContacts() {
+
+        final Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+        final Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        List<User> users = new ArrayList<User>();
         while (cursor.moveToNext()) {
-            contactNames.add(cursor.getString(cursor.getColumnIndex(Contacts.DISPLAY_NAME)));
+            users.add(new User(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)),cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_ID))));
+
         }
-        return contactNames;
+        return users;
     }
 
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        selectedPerson = searchContactAdapter.getItem(position);
+        //selectedPerson = searchContactAdapter.getItem(position);
     }
 
     public void onDatePickerButtonClick(View view) {
