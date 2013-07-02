@@ -116,20 +116,21 @@
         <RadioGroup
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:id="@+id/add_trans_type_radio_group">
 
             <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/credit"
-                    android:id="@+id/radioButton"
+                    android:id="@+id/add_trans_credit_type"
                     />
 
             <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/debit"
-                    android:id="@+id/radioButton2"
+                    android:id="@+id/add_trans_debit_type"
                     />
         </RadioGroup>
 

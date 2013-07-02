@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -20,8 +19,8 @@ public class AddCategoryDialog extends DialogFragment {
     private AddCategoryReactions categoryReactions;
 
     public interface AddCategoryReactions {
-        public void onSave();
-        public void onCancel();
+        public void onCategorySave();
+        public void onCategoryCancel();
     }
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -34,14 +33,14 @@ public class AddCategoryDialog extends DialogFragment {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         TextView newCategoryText = (TextView) dialogView.findViewById(R.id.add_trans_new_category);
                         new TransDBHelper(getActivity()).addNewCategory(newCategoryText.getText().toString());
-                        categoryReactions.onSave();
+                        categoryReactions.onCategorySave();
 
                     }
                 }).
                 setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        categoryReactions.onCancel();
+                        categoryReactions.onCategoryCancel();
                     }
                 }).
                 setTitle("New Category");
