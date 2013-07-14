@@ -2,23 +2,60 @@
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-    <include layout="@layout/mainheader"/>
+    <include layout="@layout/mainheader"
+             android:layout_height="wrap_content"
+             android:layout_alignParentStart="true"
+             android:id="@+id/main_header"/>
 
     <ListView
-            android:id="@+id/trans_list"
+            android:id="@+id/layout_translist"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/main_header" android:layout_above="@+id/main_footer" android:divider="@null"
-            >
+            android:layout_below="@+id/main_header"
+            android:layout_above="@+id/main_layout_footer"
+            android:footerDividersEnabled="true">
     </ListView>
 
     <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" android:id="@+id/main_footer" android:orientation="horizontal"
-            android:layout_alignParentEnd="false" android:layout_alignParentBottom="true"
-            android:background="@drawable/header_gradient"
-            android:focusableInTouchMode="false" android:focusable="false" android:gravity="center">
+            android:layout_height="70dp"
+            android:background="@drawable/button_gradient"
+            android:id="@+id/main_layout_footer"
+            android:layout_alignParentEnd="false"
+            android:layout_alignParentBottom="true"
+            android:padding="5dp"
+            android:gravity="center_vertical|center_horizontal">
 
+        <Button
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:text="@string/all"
+                android:id="@+id/main_submenu_all"
+                android:background="@drawable/button_menu"
+                android:textColor="@color/green"
+                android:padding="5dp"
+                android:textSize="25dp"/>
+
+        <Button
+                android:layout_width="120dp"
+                android:layout_height="60dp"
+                android:text="@string/category"
+                android:id="@+id/main_submenu_category"
+                android:background="@drawable/button_menu"
+                android:textColor="@color/grey"
+                android:padding="5dp"
+                android:textSize="25dp"/>
+
+        <Button
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:text="@string/label_type"
+                android:id="@+id/main_submenu_type"
+                android:background="@drawable/button_menu"
+                android:textColor="@color/grey"
+                android:padding="5dp"
+                android:textSize="25dp"
+                />
     </LinearLayout>
 
 </RelativeLayout>

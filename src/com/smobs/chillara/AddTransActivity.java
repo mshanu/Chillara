@@ -52,6 +52,7 @@ public class AddTransActivity extends FragmentActivity implements OnItemClickLis
     private RadioGroup transTypeGroup;
     private ImageButton addTransTypeButton;
     private Button cancelButton;
+    private TextView description;
 
 
     @Override
@@ -67,6 +68,7 @@ public class AddTransActivity extends FragmentActivity implements OnItemClickLis
         saveTrans = (Button) findViewById(R.id.add_trans_save);
         cancelButton = (Button) findViewById(R.id.add_trans_cancel);
         transTypeGroup = (RadioGroup) findViewById(R.id.add_trans_type_radio_group);
+        description = (TextView) findViewById(R.id.add_trans_description);
 
         addTransTypeButton = (ImageButton) findViewById(R.id.add_trans_add_category);
         addTransDate = (Button) findViewById(R.id.add_trans_date);
@@ -88,10 +90,6 @@ public class AddTransActivity extends FragmentActivity implements OnItemClickLis
 //                startActivity(intent);
 //            }
 //        });
-
-        SQLiteDatabase writableDatabase = transDBHelper.getWritableDatabase();
-        transDBHelper.onUpgrade(writableDatabase, 0, 0);
-        transDBHelper.onCreate(writableDatabase);
 
         prepareContact();
         prepareTransDate();
@@ -123,19 +121,27 @@ public class AddTransActivity extends FragmentActivity implements OnItemClickLis
 
                 User searchedUser = TransReaderContract.findUserByHash(readableDatabase, selectedPerson.getUserHash());
                 if (searchedUser == null) {
+                    selectedPerson.setTotalCredit(0.0);
+                    selectedPerson.setTotalDebit(0.0);
                     searchedUser = TransReaderContract.insertUser(writableDatabase, selectedPerson);
                 }
                 try {
                     Date transDate = MyDateFormat.getMyDateFormat().parse(addTransDate.getText().toString());
                     RadioButton transTypeSelected = (RadioButton) findViewById(transTypeGroup.getCheckedRadioButtonId());
-                    UserTrans userTrans = new UserTrans(Double.valueOf(amount.getText().toString()),
-                            transDate, transTypeSelected.getText().toString(),
-                            categorySpinner.getSelectedItem().toString(), null);
+                    Cursor selectedCategoryCursor = (Cursor) categorySpinner.getSelectedItem();
+                    Double amountEntered = Double.valueOf(amount.getText().toString());
+                    String transType = transTypeSelected.getText().toString();
+                    String selectedCategory = selectedCategoryCursor.getString(selectedCategoryCursor.getColumnIndex(TransReaderContract.TransCategory.DESCRIPTION));
+                    Long selectedCategoryId = selectedCategoryCursor.getLong(selectedCategoryCursor.getColumnIndex(TransReaderContract.TransCategory._ID));
+                    UserTrans userTrans = new UserTrans(amountEntered,
+                            transDate, transType,
+                            selectedCategory, description.getText().toString());
+                    searchedUser.updateTrans(userTrans);
                     TransReaderContract.insertTrans(writableDatabase, searchedUser, userTrans);
-
+                    TransReaderContract.updateCategory(writableDatabase, selectedCategoryId, amountEntered, transType);
                 } catch (ParseException e) {
-                    e.printStackTrace();
                 }
+                finish();
 
             }
 

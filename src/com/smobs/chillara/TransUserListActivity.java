@@ -42,8 +42,8 @@ public class TransUserListActivity extends Activity {
                 R.id.trans_list_item_amount,
                 R.id.trans_list_item_date,
                 R.id.trans_list_item_type};
-        transListView = (ListView) findViewById(R.id.trans_list_view);
-        Cursor cursor = new HasTransList().getTransListBy(new TransDBHelper(this),null);
+        transListView = (ListView) findViewById(R.id.trans_list_for_user_view);
+        Cursor cursor = TransReaderContract.getTransListByUser(new TransDBHelper(this), null);
 
         if (cursor.getCount() > 0) {
             SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(this,
