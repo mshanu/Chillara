@@ -29,7 +29,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE); //By this, we will have a title bar that works for all versions :-)
         setContentView(R.layout.activity_main);
-        transList = (ListView) findViewById(R.id.layout_translist);
+        transList = (ListView) findViewById(R.id.main_trans_list);
 
         subMenuAll = (Button) findViewById(R.id.main_submenu_all);
         subMenuAll.setOnClickListener(new View.OnClickListener() {
@@ -54,18 +54,22 @@ public class MainActivity extends Activity {
                 };
                 int[] to = new int[]{R.id.trans_by_user_name,
                         R.id.trans_list_credit, R.id.trans_list_debit};
-                Cursor transCategoryCursor = TransReaderContract.getTransCategory(new TransDBHelper(view.getContext()));
+                final Cursor transCategoryCursor = TransReaderContract.getTransCategory(new TransDBHelper(view.getContext()));
                 if (transCategoryCursor.getCount() > 0) {
                     SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(view.getContext(),
                             R.layout.trans_by_user_item, transCategoryCursor, from, to);
-                    transList.setOnItemClickListener(null);
+                    transList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            transCategoryCursor.moveToPosition(i);
+
+                        }
+                    });
                     transList.setAdapter(simpleCursorAdapter);
                 }
             }
 
         });
-
-        subMenuType = (Button) findViewById(R.id.main_submenu_type);
 
         transToListView();
 
@@ -94,10 +98,27 @@ public class MainActivity extends Activity {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     cursor.moveToPosition(i);
+
+                    String[] from = new String[]{
+                            TransReaderContract.UserTrans.TRANS_CATEGORY,
+                            TransReaderContract.UserTrans.TRANS_AMOUNT,
+                            TransReaderContract.UserTrans.TRANS_DATE,
+                            TransReaderContract.UserTrans.TRANS_TYPE
+                    };
+                    int[] to = new int[]{
+                            R.id.trans_list_item_category,
+                            R.id.trans_list_item_amount,
+                            R.id.trans_list_item_date,
+                            R.id.trans_list_item_type};
+
                     Intent intent = new Intent(view.getContext(), TransUserListActivity.class);
-                    intent.putExtra("TRANS_USER_NAME", cursor.getString(cursor.getColumnIndex(TransReaderContract.User.TRANS_USER_NAME)));
-                    intent.putExtra("TRANS_USER_TOTAL_CREDIT", cursor.getString(cursor.getColumnIndex(TransReaderContract.User.TRANS_USER_TOTAL_CREDIT)));
-                    intent.putExtra("TRANS_USER_TOTAL_DEBIT", cursor.getString(cursor.getColumnIndex(TransReaderContract.User.TRANS_USER_TOTAL_DEBIT)));
+                    intent.putExtra("TRANS_HEADER_TYPE", cursor.getString(cursor.getColumnIndex(TransReaderContract.User.TRANS_USER_NAME)));
+                    intent.putExtra("TRAN_HEADER_TOTAL_CREDIT", cursor.getString(cursor.getColumnIndex(TransReaderContract.User.TRANS_USER_TOTAL_CREDIT)));
+                    intent.putExtra("TRAN_HEADER_TOTAL_DEBIT", cursor.getString(cursor.getColumnIndex(TransReaderContract.User.TRANS_USER_TOTAL_DEBIT)));
+
+                    intent.putExtra("TRANS_LIST_FROM", from);
+                    intent.putExtra("TRANS_LIST_TO", to);
+
                     startActivity(intent);
                 }
             });

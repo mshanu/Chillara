@@ -27,27 +27,19 @@ public class TransUserListActivity extends Activity {
         totalCrediText = (TextView) findViewById(R.id.total_credit_value);
         totalDebitText = (TextView) findViewById(R.id.total_debit_amount);
 
-        transUserView.setText(getIntent().getExtras().getString("TRANS_USER_NAME"));
-        totalCrediText.setText(getIntent().getExtras().getString("TRANS_USER_TOTAL_CREDIT"));
-        totalDebitText.setText(getIntent().getExtras().getString("TRANS_USER_TOTAL_DEBIT"));
+        transUserView.setText(getIntent().getExtras().getString("TRANS_HEADER_TYPE"));
+        totalCrediText.setText(getIntent().getExtras().getString("TRAN_HEADER_TOTAL_CREDIT"));
+        totalDebitText.setText(getIntent().getExtras().getString("TRAN_HEADER_TOTAL_DEBIT"));
 
-        String[] from = new String[]{
-                TransReaderContract.User.TRANS_USER_NAME,
-                TransReaderContract.UserTrans.TRANS_AMOUNT,
-                TransReaderContract.UserTrans.TRANS_DATE,
-                TransReaderContract.UserTrans.TRANS_TYPE
-        };
-        int[] to = new int[]{
-                R.id.trans_list_item_name,
-                R.id.trans_list_item_amount,
-                R.id.trans_list_item_date,
-                R.id.trans_list_item_type};
+        String[] from = getIntent().getExtras().getStringArray("TRANS_LIST_FROM");
+        int[] to = getIntent().getExtras().getIntArray("TRANS_LIST_TO");
+
         transListView = (ListView) findViewById(R.id.trans_list_for_user_view);
         Cursor cursor = TransReaderContract.getTransListByUser(new TransDBHelper(this), null);
 
         if (cursor.getCount() > 0) {
             SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(this,
-                    R.layout.trans_list_item, cursor, from, to);
+                    R.layout.trans_detail_content_item, cursor, from, to);
             transListView.setAdapter(simpleCursorAdapter);
         }
     }

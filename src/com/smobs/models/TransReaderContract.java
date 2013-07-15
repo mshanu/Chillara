@@ -13,8 +13,9 @@ public class TransReaderContract {
         values.put(UserTrans.TRANS_AMOUNT, userTrans.getTransAmount());
         values.put(UserTrans.TRANS_CATEGORY, userTrans.getCategory());
         values.put(UserTrans.TRANS_DATE, MyDateFormat.getMyDateFormat().format(userTrans.getTransDate()));
-        values.put(UserTrans.TRANS_TYPE, userTrans.getCategory());
+        values.put(UserTrans.TRANS_TYPE, userTrans.getTransType());
         values.put(UserTrans.TRANS_USER_ID, searchedUser.getId());
+        values.put(UserTrans.TRANS_DESCRIPTION, userTrans.getDescription());
         writableDatabase.insert(UserTrans.TABLE_NAME, null, values);
         ContentValues userUpdate = new ContentValues();
         userUpdate.put(User.TRANS_USER_TOTAL_CREDIT, searchedUser.getTotalCredit());

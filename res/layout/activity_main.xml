@@ -8,7 +8,7 @@
              android:id="@+id/main_header"/>
 
     <ListView
-            android:id="@+id/layout_translist"
+            android:id="@+id/trans_detail_content_item"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/main_header"
@@ -28,17 +28,18 @@
 
         <Button
                 android:layout_width="100dp"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
                 android:text="@string/all"
                 android:id="@+id/main_submenu_all"
                 android:background="@drawable/button_menu"
                 android:textColor="@color/green"
                 android:padding="5dp"
-                android:textSize="25dp"/>
+                android:textSize="25dp"
+                android:layout_marginRight="10dp"/>
 
         <Button
                 android:layout_width="120dp"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
                 android:text="@string/category"
                 android:id="@+id/main_submenu_category"
                 android:background="@drawable/button_menu"
@@ -46,16 +47,6 @@
                 android:padding="5dp"
                 android:textSize="25dp"/>
 
-        <Button
-                android:layout_width="100dp"
-                android:layout_height="60dp"
-                android:text="@string/label_type"
-                android:id="@+id/main_submenu_type"
-                android:background="@drawable/button_menu"
-                android:textColor="@color/grey"
-                android:padding="5dp"
-                android:textSize="25dp"
-                />
     </LinearLayout>
 
 </RelativeLayout>
